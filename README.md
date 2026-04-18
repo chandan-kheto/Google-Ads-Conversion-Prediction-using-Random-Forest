@@ -1,111 +1,210 @@
-# 📊 Google Ads Conversion Prediction using Random Forest
+# 📊 Google Ads Performance Prediction (Data Science Project)
 
 ## 📝 Project Overview
-This project focuses on predicting whether a Google Ads campaign will **lead to a conversion** (sale/sign-up) based on historical advertising data. The dataset is **raw and uncleaned**, simulating real-world scenarios where data cleaning, feature engineering, and preprocessing are essential.
 
-The main goal is to build an **end-to-end Machine Learning pipeline** that:
-- Cleans messy marketing data.
-- Performs feature engineering to create business-driven features.
-- Trains a **Random Forest Classifier** to predict conversions.
-- Evaluates the model using relevant performance metrics.
+This project focuses on predicting **high-performing Google Ads campaigns** using real-world marketing data.
 
----
+Instead of simply predicting whether a conversion occurred, the problem is reframed to:
 
-## ✅ **Dataset Description**
-The dataset contains raw advertising campaign data from Google Ads with columns like:
-- **Ad_ID** → Unique campaign ID  
-- **Campaign_Name** → Name of the campaign (with typos)  
-- **Clicks** → Number of ad clicks  
-- **Impressions** → Number of impressions  
-- **Cost** → Campaign cost (₹ / $ with mixed symbols)  
-- **Leads** → Number of leads generated  
-- **Conversions** → Number of conversions (sales/signups)  
-- **Conversion Rate** → Ratio of conversions to clicks (to be dropped to avoid leakage)  
-- **Sale_Amount** → Revenue generated  
-- **Ad_Date** → Date (in inconsistent formats)  
-- **Device** → Device type (Mobile/Desktop/Tablet)  
-- **Location** → City (with case variations)  
-- **Keyword** → Keyword triggering the ad  
+> 🎯 **Classify ads into high vs low performers based on conversion rate**
+
+This approach aligns with real business goals, where companies aim to **optimize campaign performance and maximize ROI**.
 
 ---
 
-## ✅ **Key Challenges in the Data**
-✔ Inconsistent date formats  
-✔ Spelling errors and typos in text columns  
-✔ Missing values in numeric fields  
-✔ Mixed symbols in currency columns  
-✔ Irregular casing in categorical fields  
-✔ Duplicate rows  
+## 🎯 Business Objective
+
+* Identify **high-performing ad campaigns**
+* Understand **key factors influencing conversion performance**
+* Enable **data-driven marketing decisions**
 
 ---
 
-## ✅ **Project Workflow**
-### **1. Data Cleaning**
-- Removed duplicates
-- Handled missing values (Cost, Sale Amount, Clicks, Conversions)
-- Converted currency fields to numeric
-- Fixed inconsistent date formats
-- Standardized text columns (Device, Location, Campaign Name)
+## 📁 Dataset Description
 
-### **2. Feature Engineering**
-- Created binary target:  
-  ```python
-  Converted = 1 if Conversions > 0 else 0
-Added business features:
+The dataset contains Google Ads campaign data with features such as:
 
-CPC (Cost per Click) = Cost / Clicks
+* **Ad_ID** → Unique campaign identifier
+* **Campaign_Name** → Campaign name (with inconsistencies)
+* **Clicks / Impressions** → User engagement metrics
+* **Cost** → Advertising spend (₹ / $ mixed formats)
+* **Leads / Conversions** → Conversion indicators
+* **Conversion Rate** → Used to define target variable
+* **Sale_Amount** → Revenue generated
+* **Device / Location / Keyword** → Campaign attributes
 
-CTR (Click-Through Rate) = Clicks / Impressions
+---
 
-Dropped Conversion Rate to prevent data leakage
+## ⚠️ Real-World Data Challenges
 
-3. Encoding
-Applied Label Encoding on categorical features (Device, Location, Campaign Name)
+* Inconsistent date formats
+* Missing values in numeric columns
+* Currency symbols in cost fields
+* Typos and inconsistent text formatting
+* Duplicate records
+* Risk of **data leakage**
 
-4. Model Building
-Used Random Forest Classifier for prediction
+---
 
-Key hyperparameters:
+## 🔧 Project Workflow
 
+### 1️⃣ Data Cleaning
 
-n_estimators=200, max_depth=10, random_state=42
-5. Model Evaluation
-Accuracy
+* Removed duplicates
+* Handled missing values using median and zero imputation
+* Cleaned currency columns (₹, $ removed)
+* Standardized categorical features (Device, Location, Campaign Name)
+* Converted date column to datetime
 
-Precision
+---
 
-Recall
+### 2️⃣ Feature Engineering
 
-F1 Score
+Created business-driven features:
 
-ROC-AUC
+* **CTR (Click-Through Rate)** = Clicks / Impressions
+* **CPC (Cost Per Click)** = Cost / Clicks
 
-Feature Importance Visualization
+Defined target variable:
 
+```python
+High_Conversion = 1 if Conversion_Rate > 0.05 else 0
+```
 
-✅ Model Performance
-Random Forest Classifier Performance:
-Accuracy: 0.9712
-Precision: 0.9712
-Recall: 1.0000
-F1 Score: 0.9854
-ROC AUC: 0.5228 
+Removed leakage features:
 
-(Scores may vary based on dataset size and cleaning method)
+* Conversions
+* Conversion Rate
 
-✅ Visualizations
-Feature Importance Chart
+---
 
-ROC Curve
+### 3️⃣ Exploratory Data Analysis (EDA)
 
-✅ Tech Stack
-Python
+* Conversion distribution analysis
+* CTR vs Conversion
+* CPC vs Conversion
+* Correlation heatmap
 
-Pandas, NumPy for data preprocessing
+📌 **Key Insights:**
 
-Matplotlib, Seaborn for visualization
+* Higher **CTR → better conversion performance**
+* Higher **CPC → higher-quality traffic**
+* No single feature dominates → multi-factor influence
 
-Scikit-learn for ML pipeline
+---
 
-Random Forest Classifier for prediction
+### 4️⃣ Data Preprocessing
 
+* Applied **One-Hot Encoding** for categorical features
+* Handled remaining missing values
+* Used **train-test split with stratification**
+
+---
+
+### 5️⃣ Model Building
+
+Models used:
+
+* Logistic Regression (baseline)
+* Random Forest Classifier
+
+---
+
+### 6️⃣ Model Evaluation
+
+Metrics used:
+
+* Accuracy
+* Precision
+* Recall
+* F1 Score
+* ROC-AUC
+
+---
+
+## 📈 Final Model Performance
+
+### 🔹 Logistic Regression
+
+* Accuracy: **78.08%**
+* Precision: **0.60**
+* Recall: **0.84**
+* F1 Score: **0.70**
+* ROC-AUC: **0.83**
+
+### 🔹 Random Forest
+
+* Accuracy: **78.27%**
+* Precision: **0.63**
+* Recall: **0.70**
+* F1 Score: **0.66**
+* ROC-AUC: **0.82**
+
+---
+
+## 🧠 Model Insights
+
+* Logistic Regression performs better in **recall**, making it ideal for identifying high-performing ads
+* Random Forest provides more balanced predictions
+* **CTR, CPC, and Clicks** are the most influential features
+* Campaign performance depends on **multiple interacting factors**
+
+---
+
+## 💡 Business Impact
+
+* Identifies **high ROI campaigns early**
+* Helps optimize **advertising budget allocation**
+* Supports better **targeting strategies**
+
+---
+
+## 📊 Visualizations
+
+* Conversion Distribution
+* CTR vs Conversion
+* CPC vs Conversion
+* Feature Importance
+* Correlation Heatmap
+
+---
+
+## 🛠️ Tech Stack
+
+* Python
+* Pandas, NumPy
+* Matplotlib, Seaborn
+* Scikit-learn
+
+---
+
+## 🚀 Key Learnings
+
+* Handling **real-world messy data**
+* Avoiding **data leakage**
+* Importance of **feature engineering (CTR, CPC)**
+* Trade-offs between **precision and recall**
+
+---
+
+## 📌 Conclusion
+
+This project demonstrates how machine learning can be applied to **real-world marketing data** to generate actionable insights and improve campaign performance.
+
+---
+
+## 📎 How to Run
+
+```bash
+# Create virtual environment
+python -m venv venv
+
+# Activate
+venv\Scripts\activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Run project
+python your_script.py
+```
